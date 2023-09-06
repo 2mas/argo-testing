@@ -2,6 +2,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: traefik-ingress
+  namespace: test
 spec:
   entryPoints:
   - web
@@ -10,6 +11,7 @@ spec:
     match: Host(`example.com`) || (Host(`example.org`) && Path(`/traefik`))
     services:
     - name: test-svc
+      namespace: test2
       port: 80
 ---
 apiVersion: networking.k8s.io/v1
@@ -27,6 +29,7 @@ spec:
         backend:
           service:
             name: test-svc
+            namespace: test-svc
             port:
               number: 80
       - path: /testpath2
@@ -34,6 +37,7 @@ spec:
         backend:
           service:
             name: test-svc
+            namespace: test-svc
             port:
               number: 80
   - host: "2.foo.com"
@@ -58,6 +62,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: test-svc
+  namespace: test
 spec:
   type: ClusterIP
   selector:
@@ -71,6 +76,50 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: test
+  namespace: test
+spec:
+  selector:
+    matchLabels:
+      app: test
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.24.0-alpine
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: test2
+    argocd.argoproj.io/managed-by: test
+  name: test2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-svc
+  namespace: test2
+spec:
+  type: ClusterIP
+  selector:
+    app: test
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+  namespace: test2
 spec:
   selector:
     matchLabels:
