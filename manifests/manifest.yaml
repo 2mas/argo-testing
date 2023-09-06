@@ -19,7 +19,8 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - http:
+  - host: "*.foo.com"
+    http:
       paths:
       - path: /testpath
         pathType: Prefix
