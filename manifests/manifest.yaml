@@ -47,7 +47,7 @@ kind: Ingress
 metadata:
   name: ingress
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
   - host: "1.foo.com"
     http:
