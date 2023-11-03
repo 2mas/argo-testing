@@ -8,7 +8,13 @@ spec:
   - web
   routes:
   - kind: Rule
-    match: Host(`example.com`) || (Host(`example.org`) && Path(`/traefik`))
+    match: Host(`example11.com`) || (Host(`example11.org`) && Path(`/traefik`))
+    services:
+    - name: test-svc
+      namespace: test
+      port: 80
+  - kind: Rule
+    match: Host(`example12.com`) || (Host(`example12.org`) && Path(`/traefik`))
     services:
     - name: test-svc
       namespace: test2
@@ -24,7 +30,13 @@ spec:
   - web
   routes:
   - kind: Rule
-    match: Host(`example2.com`) || (Host(`example2.org`) && Path(`/traefik`))
+    match: Host(`example21.com`) || (Host(`example21.org`) && Path(`/traefik`))
+    services:
+    - name: test-svc
+      namespace: test
+      port: 80
+  - kind: Rule
+    match: Host(`example22.com`) || (Host(`example22.org`) && Path(`/traefik`))
     services:
     - name: test-svc
       namespace: test2
