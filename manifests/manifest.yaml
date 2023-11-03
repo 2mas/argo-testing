@@ -1,7 +1,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: traefik-ingress
+  name: traefik-ingress-1
   namespace: test
 spec:
   entryPoints:
@@ -9,6 +9,22 @@ spec:
   routes:
   - kind: Rule
     match: Host(`example.com`) || (Host(`example.org`) && Path(`/traefik`))
+    services:
+    - name: test-svc
+      namespace: test2
+      port: 80
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-ingress-2
+  namespace: test
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`example2.com`) || (Host(`example2.org`) && Path(`/traefik`))
     services:
     - name: test-svc
       namespace: test2
